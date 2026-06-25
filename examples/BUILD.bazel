@@ -1,0 +1,14 @@
+load("@aspect_rules_js//js:defs.bzl", "js_test")
+load("//node_addon:defs.bzl", "node_addon")
+
+node_addon(
+    name = "hello",
+    srcs = ["hello.cc"],
+    copts = ["-std=c++17"],
+)
+
+js_test(
+    name = "hello_test",
+    data = [":hello"],
+    entry_point = "test.js",
+)
