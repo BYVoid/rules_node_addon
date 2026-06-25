@@ -2,6 +2,12 @@
 
 load("@rules_cc//cc:defs.bzl", "cc_binary")
 
+def _default_copts():
+    return select({
+        "@platforms//os:windows": ["/std:c++17"],
+        "//conditions:default": ["-std=c++17"],
+    })
+
 def node_addon(
         name,
         srcs,
@@ -26,7 +32,7 @@ def node_addon(
       name: Name of the generated addon target. The output file is `name.node`.
       srcs: C/C++ sources for the addon.
       deps: Additional C/C++ dependencies.
-      copts: Additional compiler options.
+      copts: Additional compiler options. Defaults to C++17 when empty.
       linkopts: Additional linker options.
       data: Runtime files needed by the shared library.
       defines: C/C++ defines.
@@ -43,7 +49,7 @@ def node_addon(
     cc_binary(
         name = shared_lib,
         srcs = srcs,
-        copts = copts,
+        copts = copts if copts else _default_copts(),
         data = data,
         defines = defines,
         includes = includes,
