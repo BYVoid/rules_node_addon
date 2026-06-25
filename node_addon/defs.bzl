@@ -71,7 +71,7 @@ def node_addon(
 for f in $(SRCS); do
   case "$$f" in
     *.so|*.dylib)
-      cp "$$f" "$@"
+      cp "$$f" "$(OUTS)"
       exit 0
       ;;
   esac
@@ -83,7 +83,7 @@ exit 1
 @echo off
 for %%f in ($(SRCS)) do (
   if /I "%%~xf"==".dll" (
-    copy /Y "%%f" "$@"
+    copy /Y "%%f" "$(OUTS)"
     if errorlevel 1 exit /B 1
     exit /B 0
   )
