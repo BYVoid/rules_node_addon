@@ -1,5 +1,6 @@
 """Rules for building Node.js native addons."""
 
+load("@bazel_skylib//rules:copy_file.bzl", "copy_file")
 load("@rules_cc//cc:defs.bzl", "cc_binary")
 
 def _default_copts():
@@ -72,46 +73,10 @@ def node_addon(
         **kwargs
     )
 
-    native.genrule(
+    copy_file(
         name = name,
-        srcs = [":" + shared_lib],
-        outs = [name + ".node"],
-        cmd = """
-for f in $(SRCS); do
-  case "$$f" in
-    *.so|*.dylib)
-      cp "$$f" "$(OUTS)"
-      exit 0
-      ;;
-  esac
-done
-echo "No shared library found in $(SRCS)" >&2
-exit 1
-""",
-        cmd_bat = """
-@echo off
-for %%f in ($(SRCS)) do (
-  if /I "%%~xf"==".dll" (
-    copy /Y "%%f" "$(OUTS)"
-    if errorlevel 1 exit /B 1
-    exit /B 0
-  )
-)
-echo No DLL found in $(SRCS) 1>&2
-exit /B 1
-""",
-        cmd_ps = """
-$$ErrorActionPreference = "Stop"
-$$srcs = "$(SRCS)".Split(" ", [System.StringSplitOptions]::RemoveEmptyEntries)
-foreach ($$src in $$srcs) {
-  if ([System.IO.Path]::GetExtension($$src) -ieq ".dll") {
-    Copy-Item -LiteralPath $$src -Destination "$(OUTS)" -Force
-    exit 0
-  }
-}
-Write-Error "No DLL found in $(SRCS)"
-exit 1
-""",
+        src = ":" + shared_lib,
+        out = name + ".node",
         tags = tags,
         testonly = testonly,
         visibility = visibility,
