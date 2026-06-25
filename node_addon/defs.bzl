@@ -8,12 +8,21 @@ _NODE_ADDON_API_HEADERS_ONLY = Label("@node_addon_api//:node_addon_api_headers_o
 _NODE_API_WINDOWS = Label("@windows_node_api//:node_api")
 _WINDOWS = Label("@platforms//os:windows")
 _MACOS = Label("@platforms//os:macos")
+_NAPI_VERSIONS = ["1", "2", "3", "4", "5", "6", "7", "8", "9", "10"]
 
 def _default_copts():
     return select({
         _WINDOWS: ["/std:c++17"],
         "//conditions:default": ["-std=c++17"],
     })
+
+def _napi_version_defines():
+    defines = {
+        "//conditions:default": [],
+    }
+    for version in _NAPI_VERSIONS:
+        defines[Label("//node_addon:napi_version_%s_enabled" % version)] = ["NAPI_VERSION=%s" % version]
+    return select(defines)
 
 def node_addon(
         name,
@@ -58,7 +67,7 @@ def node_addon(
         srcs = srcs,
         copts = copts if copts else _default_copts(),
         data = data,
-        defines = defines,
+        defines = defines + _napi_version_defines(),
         includes = includes,
         linkopts = linkopts + select({
             _MACOS: ["-undefined", "dynamic_lookup"],
