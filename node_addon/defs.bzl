@@ -91,6 +91,18 @@ for %%f in ($(SRCS)) do (
 echo No DLL found in $(SRCS) 1>&2
 exit /B 1
 """,
+        cmd_ps = """
+$ErrorActionPreference = "Stop"
+$srcs = "$(SRCS)".Split(" ", [System.StringSplitOptions]::RemoveEmptyEntries)
+foreach ($src in $srcs) {
+  if ([System.IO.Path]::GetExtension($src) -ieq ".dll") {
+    Copy-Item -LiteralPath $src -Destination "$(OUTS)" -Force
+    exit 0
+  }
+}
+Write-Error "No DLL found in $(SRCS)"
+exit 1
+""",
         tags = tags,
         testonly = testonly,
         visibility = visibility,

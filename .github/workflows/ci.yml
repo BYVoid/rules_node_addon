@@ -24,4 +24,4 @@ jobs:
         uses: actions/checkout@v4
 
       - name: Test examples
-        run: npx --yes @bazel/bazelisk --nohome_rc test //examples/...
+        run: npx --yes @bazel/bazelisk --nohome_rc test //examples/... --verbose_failures
