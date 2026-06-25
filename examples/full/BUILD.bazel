@@ -1,8 +1,5 @@
-load("@npm//:defs.bzl", "npm_link_all_packages")
 load("@rules_node_addon//node_addon:defs.bzl", "node_addon")
 load("//:bun.bzl", "bun_run_test")
-
-npm_link_all_packages()
 
 node_addon(
     name = "hello_full",
@@ -11,8 +8,9 @@ node_addon(
 
 _TEST_DATA = [
     ":hello_full",
-    ":node_modules",
+    "@rules_node_addon_full_npm//:node_modules",
     "package.json",
+    "run_tsx.mjs",
     "test.ts",
 ]
 
@@ -22,6 +20,10 @@ bun_run_test(
     runfiles_env = {
         "ADDON_PATH": "_main/hello_full.node",
     },
+    runfiles_env_files = {
+        "@rules_node_addon_full_npm//:node_modules/tsx/dist/cli.mjs": "TSX_CLI_PATH",
+        "@rules_node_addon_full_npm//:node_modules/tsx/dist/loader.mjs": "TSX_LOADER_PATH",
+    },
     script = "test:tsx",
 )
 
@@ -30,6 +32,10 @@ bun_run_test(
     data = _TEST_DATA,
     runfiles_env = {
         "ADDON_PATH": "_main/hello_full.node",
+    },
+    runfiles_env_files = {
+        "@rules_node_addon_full_npm//:node_modules/tsx/dist/cli.mjs": "TSX_CLI_PATH",
+        "@rules_node_addon_full_npm//:node_modules/tsx/dist/loader.mjs": "TSX_LOADER_PATH",
     },
     script = "test:bun",
 )

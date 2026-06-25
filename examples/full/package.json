@@ -4,7 +4,7 @@
   "type": "module",
   "scripts": {
     "test:bun": "bun ./test.ts",
-    "test:tsx": "node node_modules/tsx/dist/cli.mjs ./test.ts"
+    "test:tsx": "node ./run_tsx.mjs ./test.ts"
   },
   "devDependencies": {
     "tsx": "4.20.6"

@@ -18,8 +18,9 @@ type BunRuntime = {
 
 const bun = (globalThis as { Bun?: BunRuntime }).Bun;
 if (bun) {
+  const tsxLoader = process.env.TSX_LOADER_PATH ?? "./node_modules/tsx/dist/loader.mjs";
   const result = bun.spawnSync(
-    ["node", "--import", "./node_modules/tsx/dist/loader.mjs", "./test.ts"],
+    ["node", "--import", tsxLoader, "./test.ts"],
     { env: process.env },
   );
   process.stdout.write(new TextDecoder().decode(result.stdout));
