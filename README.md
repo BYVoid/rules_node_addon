@@ -2,12 +2,21 @@
 
 Bazel rules for building Node.js native addons.
 
+## Runtime support
+
+`node_addon` builds Node-API addons for Node.js. Loading the generated `.node`
+file with Node.js is supported on Linux, macOS, and Windows.
+
+Bun can also load Node-API addons, and the full example includes a Bun test on
+Linux and macOS. Bun on Windows is not currently supported by these rules because
+Bun crashes when requiring this native addon on Windows.
+
 ## Setup
 
 Enable the Windows addon support repository and Node runtime with headers in your root `MODULE.bazel`:
 
 ```starlark
-bazel_dep(name = "rules_node_addon", version = "0.0.0")
+bazel_dep(name = "rules_node_addon", version = "1.0.0")
 bazel_dep(name = "rules_nodejs", version = "6.7.4")
 
 node_addon_windows = use_extension("@rules_node_addon//node_addon:windows.bzl", "node_addon_windows")

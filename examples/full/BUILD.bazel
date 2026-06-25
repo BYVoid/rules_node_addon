@@ -6,7 +6,7 @@ load("//:bun.bzl", "bun_run_test")
 
 node_addon(
     name = "hello_full",
-    srcs = ["hello_full.cc"],
+    srcs = ["addon.cc"],
 )
 
 ts_project(
