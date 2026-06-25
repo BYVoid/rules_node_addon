@@ -48,4 +48,9 @@ bun_run_test(
         "ADDON_PATH": "_main/hello_full.node",
     },
     script = "test:bun",
+    # Bun currently crashes when requiring this Node-API addon on Windows.
+    target_compatible_with = select({
+        "@platforms//os:windows": ["@platforms//:incompatible"],
+        "//conditions:default": [],
+    }),
 )
