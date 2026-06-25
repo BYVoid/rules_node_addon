@@ -22,8 +22,5 @@ jobs:
       - name: Checkout
         uses: actions/checkout@v4
 
-      - name: Install Bazelisk
-        run: npm install --global @bazel/bazelisk
-
       - name: Test examples
-        run: bazel test //examples/...
+        run: npx --yes @bazel/bazelisk --nohome_rc test //examples/...
