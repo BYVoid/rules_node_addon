@@ -1,4 +1,4 @@
-"""Module extensions for rules_node_addon."""
+"""Windows support module extension for rules_node_addon."""
 
 def _node_api_repo_impl(repository_ctx):
     version = repository_ctx.attr.node_version
@@ -60,6 +60,7 @@ cc_import(
 
 cc_library(
     name = "node_api",
+    target_compatible_with = ["@platforms//os:windows"],
     deps = [":node_headers"] + select({
         ":windows_x64": [":node_lib_win_x64"],
         ":windows_arm64": [":node_lib_win_arm64"],

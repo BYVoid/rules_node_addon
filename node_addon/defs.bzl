@@ -61,10 +61,13 @@ def node_addon(
         local_defines = local_defines,
         tags = tags,
         testonly = testonly,
-        deps = [
-            "@node_addon_api//:node_addon_api_headers_only",
-            "@node_addon_node_api//:node_api",
-        ] + deps,
+        deps = deps + select({
+            "@platforms//os:windows": [
+                "@node_addon_api//:node_addon_api_headers_only",
+                "@node_addon_node_api//:node_api",
+            ],
+            "//conditions:default": ["@node_addon_api//:node_addon_api"],
+        }),
         visibility = ["//visibility:private"],
         **kwargs
     )

@@ -14,5 +14,5 @@ node_addon = use_extension("//node_addon:extensions.bzl", "node_addon")
 use_repo(node_addon, "node_addon_node_api")
 
 node = use_extension("@rules_nodejs//nodejs:extensions.bzl", "node")
-node.toolchain()
+node.toolchain(include_headers = True)
 use_repo(node, "nodejs_toolchains")
