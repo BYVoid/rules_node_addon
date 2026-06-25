@@ -2,18 +2,18 @@ load("@aspect_rules_js//js:defs.bzl", "js_test")
 load("@rules_node_addon//node_addon:defs.bzl", "node_addon")
 
 node_addon(
-    name = "hello26",
-    srcs = ["hello26.cc"],
+    name = "version",
+    srcs = ["version.cc"],
 )
 
 js_test(
-    name = "hello26_cjs_test",
-    data = [":hello26"],
+    name = "version_cjs_test",
+    data = [":version"],
     entry_point = "test.cjs",
 )
 
 js_test(
-    name = "hello26_mjs_test",
-    data = [":hello26"],
+    name = "version_mjs_test",
+    data = [":version"],
     entry_point = "test.mjs",
 )

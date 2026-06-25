@@ -26,6 +26,6 @@ jobs:
       - name: Test examples
         run: npx --yes @bazel/bazelisk --nohome_rc test //examples/hello/... --verbose_failures
 
-      - name: Test Node 26 example
-        working-directory: examples/node26
+      - name: Test pinned Node version example
+        working-directory: examples/node_version_pin
         run: npx --yes @bazel/bazelisk --nohome_rc test //... --verbose_failures
