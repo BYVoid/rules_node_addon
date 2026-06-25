@@ -1,3 +1,6 @@
+load("@aspect_rules_js//js:defs.bzl", "js_test")
+load("@aspect_rules_ts//ts:defs.bzl", "ts_project")
+load("@bazel_skylib//rules:copy_file.bzl", "copy_file")
 load("@rules_node_addon//node_addon:defs.bzl", "node_addon")
 load("//:bun.bzl", "bun_run_test")
 
@@ -6,36 +9,43 @@ node_addon(
     srcs = ["hello_full.cc"],
 )
 
-_TEST_DATA = [
-    ":hello_full",
-    "@rules_node_addon_full_npm//:node_modules",
-    "package.json",
-    "run_tsx.mjs",
-    "test.ts",
-]
+ts_project(
+    name = "test_ts",
+    srcs = ["test.ts"],
+    declaration = True,
+    out_dir = "dist",
+    root_dir = ".",
+    source_map = False,
+    transpiler = "tsc",
+    tsconfig = "tsconfig.json",
+    validate = False,
+)
 
-bun_run_test(
-    name = "full_tsx_test",
-    data = _TEST_DATA,
-    runfiles_env = {
-        "ADDON_PATH": "_main/hello_full.node",
-    },
-    runfiles_env_files = {
-        "@rules_node_addon_full_npm//:node_modules/tsx/dist/cli.mjs": "TSX_CLI_PATH",
-        "@rules_node_addon_full_npm//:node_modules/tsx/dist/loader.mjs": "TSX_LOADER_PATH",
-    },
-    script = "test:tsx",
+copy_file(
+    name = "hello_full_dist",
+    src = ":hello_full",
+    out = "dist/hello_full.node",
+)
+
+js_test(
+    name = "full_js_test",
+    data = [
+        ":hello_full_dist",
+        ":test_ts",
+        "package.json",
+    ],
+    entry_point = "dist/test.js",
 )
 
 bun_run_test(
     name = "full_bun_test",
-    data = _TEST_DATA,
+    data = [
+        ":hello_full",
+        "package.json",
+        "test.ts",
+    ],
     runfiles_env = {
         "ADDON_PATH": "_main/hello_full.node",
-    },
-    runfiles_env_files = {
-        "@rules_node_addon_full_npm//:node_modules/tsx/dist/cli.mjs": "TSX_CLI_PATH",
-        "@rules_node_addon_full_npm//:node_modules/tsx/dist/loader.mjs": "TSX_LOADER_PATH",
     },
     script = "test:bun",
 )

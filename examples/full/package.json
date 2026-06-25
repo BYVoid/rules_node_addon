@@ -3,10 +3,6 @@
   "private": true,
   "type": "module",
   "scripts": {
-    "test:bun": "bun ./test.ts",
-    "test:tsx": "node ./run_tsx.mjs ./test.ts"
-  },
-  "devDependencies": {
-    "tsx": "4.20.6"
+    "test:bun": "bun ./test.ts"
   }
 }

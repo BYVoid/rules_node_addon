@@ -6,6 +6,9 @@ module(
 bazel_dep(name = "platforms", version = "1.0.0")
 bazel_dep(name = "rules_node_addon", version = "0.0.0")
 bazel_dep(name = "rules_nodejs", version = "6.7.4")
+bazel_dep(name = "bazel_skylib", version = "1.9.0")
+bazel_dep(name = "aspect_rules_js", version = "3.2.2")
+bazel_dep(name = "aspect_rules_ts", version = "3.8.11")
 
 local_path_override(
     module_name = "rules_node_addon",
@@ -22,10 +25,6 @@ use_repo(node, "nodejs_toolchains")
 bun = use_extension("//:bun.bzl", "bun")
 use_repo(bun, "rules_node_addon_bun_host")
 
-npm_deps = use_extension("//:npm_deps.bzl", "npm_deps")
-npm_deps.install(
-    name = "rules_node_addon_full_npm",
-    package_json = "//:package.json",
-    package_lock = "//:package-lock.json",
-)
-use_repo(npm_deps, "rules_node_addon_full_npm")
+ts = use_extension("@aspect_rules_ts//ts:extensions.bzl", "ext")
+ts.deps()
+use_repo(ts, "npm_typescript")

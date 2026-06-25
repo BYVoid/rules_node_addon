@@ -8,26 +8,6 @@ type Addon = {
   hello(): string;
 };
 
-type BunRuntime = {
-  spawnSync(command: string[], options?: { env?: NodeJS.ProcessEnv }): {
-    exitCode: number;
-    stdout: Uint8Array;
-    stderr: Uint8Array;
-  };
-};
-
-const bun = (globalThis as { Bun?: BunRuntime }).Bun;
-if (bun) {
-  const tsxLoader = process.env.TSX_LOADER_PATH ?? "./node_modules/tsx/dist/loader.mjs";
-  const result = bun.spawnSync(
-    ["node", "--import", tsxLoader, "./test.ts"],
-    { env: process.env },
-  );
-  process.stdout.write(new TextDecoder().decode(result.stdout));
-  process.stderr.write(new TextDecoder().decode(result.stderr));
-  process.exit(result.exitCode);
-}
-
 const require = createRequire(import.meta.url);
 const dirname = path.dirname(fileURLToPath(import.meta.url));
 const sourceAddonPath = process.env.ADDON_PATH ?? path.join(dirname, "hello_full.node");

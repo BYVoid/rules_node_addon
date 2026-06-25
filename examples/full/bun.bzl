@@ -148,18 +148,6 @@ def _cmd_runfiles_env(env):
         index += 1
     return "\n".join(lines)
 
-def _runfiles_env_file_values(targets):
-    env = {}
-    files = []
-    for target, name in targets.items():
-        target_files = target[DefaultInfo].files.to_list()
-        if len(target_files) != 1:
-            fail("runfiles_env_files target for '{}' must provide exactly one file.".format(name))
-        file = target_files[0]
-        env[name] = _runfiles_path(file)
-        files.append(file)
-    return env, files
-
 def _runfiles_path(file):
     workspace_name = file.owner.workspace_name
     short_path = file.short_path
@@ -196,9 +184,7 @@ def _bun_run_test_impl(ctx):
         fail("bun_run_test requires a hermetic rules_nodejs runtime with a node executable.")
 
     package_dir = ctx.attr.package or ctx.label.package
-    runfiles_env_files, env_files = _runfiles_env_file_values(ctx.attr.runfiles_env_files)
     runfiles_env = dict(ctx.attr.runfiles_env)
-    runfiles_env.update(runfiles_env_files)
 
     ctx.actions.expand_template(
         output = executable,
@@ -219,7 +205,7 @@ def _bun_run_test_impl(ctx):
             ctx.file._bun,
             node,
             executable,
-        ] + env_files,
+        ],
         transitive_files = depset(transitive = _collect_runfiles(ctx.attr.data) + [ctx.attr._node_runtime[DefaultInfo].default_runfiles.files]),
     )
 
@@ -234,7 +220,6 @@ bun_run_test = rule(
         "script": attr.string(mandatory = True),
         "package": attr.string(),
         "runfiles_env": attr.string_dict(),
-        "runfiles_env_files": attr.label_keyed_string_dict(allow_files = True),
         "data": attr.label_list(allow_files = True),
         "_bun": attr.label(
             default = "@rules_node_addon_bun_host//:bun_bin",
