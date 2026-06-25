@@ -1,0 +1,35 @@
+load("@npm//:defs.bzl", "npm_link_all_packages")
+load("@rules_node_addon//node_addon:defs.bzl", "node_addon")
+load("//:bun.bzl", "bun_run_test")
+
+npm_link_all_packages()
+
+node_addon(
+    name = "hello_full",
+    srcs = ["hello_full.cc"],
+)
+
+_TEST_DATA = [
+    ":hello_full",
+    ":node_modules",
+    "package.json",
+    "test.ts",
+]
+
+bun_run_test(
+    name = "full_tsx_test",
+    data = _TEST_DATA,
+    runfiles_env = {
+        "ADDON_PATH": "_main/hello_full.node",
+    },
+    script = "test:tsx",
+)
+
+bun_run_test(
+    name = "full_bun_test",
+    data = _TEST_DATA,
+    runfiles_env = {
+        "ADDON_PATH": "_main/hello_full.node",
+    },
+    script = "test:bun",
+)

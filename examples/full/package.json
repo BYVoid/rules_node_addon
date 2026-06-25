@@ -1,0 +1,12 @@
+{
+  "name": "rules-node-addon-full-example",
+  "private": true,
+  "type": "module",
+  "scripts": {
+    "test:bun": "bun ./test.ts",
+    "test:tsx": "node node_modules/tsx/dist/cli.mjs ./test.ts"
+  },
+  "devDependencies": {
+    "tsx": "4.20.6"
+  }
+}

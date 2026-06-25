@@ -1,0 +1,32 @@
+module(
+    name = "rules_node_addon_full_example",
+    version = "0.0.0",
+)
+
+bazel_dep(name = "aspect_rules_js", version = "3.2.2")
+bazel_dep(name = "platforms", version = "1.0.0")
+bazel_dep(name = "rules_node_addon", version = "0.0.0")
+bazel_dep(name = "rules_nodejs", version = "6.7.4")
+
+local_path_override(
+    module_name = "rules_node_addon",
+    path = "../..",
+)
+
+node_addon_windows = use_extension("@rules_node_addon//node_addon:windows.bzl", "node_addon_windows")
+use_repo(node_addon_windows, "windows_node_api")
+
+node = use_extension("@rules_nodejs//nodejs:extensions.bzl", "node")
+node.toolchain(include_headers = True)
+use_repo(node, "nodejs_toolchains")
+
+bun = use_extension("//:bun.bzl", "bun")
+use_repo(bun, "rules_node_addon_bun_host")
+
+npm = use_extension("@aspect_rules_js//npm:extensions.bzl", "npm")
+npm.npm_translate_lock(
+    name = "npm",
+    data = ["//:pnpm-workspace.yaml"],
+    pnpm_lock = "//:pnpm-lock.yaml",
+)
+use_repo(npm, "npm")

@@ -34,3 +34,7 @@ jobs:
       - name: Test pinned Node version example
         working-directory: examples/node_version_pin
         run: npx --yes @bazel/bazelisk --nohome_rc test //... --verbose_failures
+
+      - name: Test full TypeScript example
+        working-directory: examples/full
+        run: npx --yes @bazel/bazelisk --nohome_rc test //... --verbose_failures
