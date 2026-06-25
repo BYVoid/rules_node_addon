@@ -8,7 +8,13 @@ node_addon(
 )
 
 js_test(
-    name = "hello_test",
+    name = "hello_cjs_test",
     data = [":hello"],
-    entry_point = "test.js",
+    entry_point = "test.cjs",
+)
+
+js_test(
+    name = "hello_mjs_test",
+    data = [":hello"],
+    entry_point = "test.mjs",
 )

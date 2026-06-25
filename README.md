@@ -32,5 +32,5 @@ This produces `hello.node`, suitable for `require("./hello.node")` from Node.js.
 Run the included test with:
 
 ```sh
-bazel test //examples:hello_test
+bazel test //examples/...
 ```
