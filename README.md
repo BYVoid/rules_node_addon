@@ -10,26 +10,26 @@ Enable the Windows addon support repository and Node runtime with headers in you
 bazel_dep(name = "rules_node_addon", version = "0.0.0")
 bazel_dep(name = "rules_nodejs", version = "6.7.4")
 
-node_addon = use_extension("@rules_node_addon//node_addon:windows.bzl", "node_addon")
-use_repo(node_addon, "node_addon_node_api")
+node_addon_windows = use_extension("@rules_node_addon//node_addon:windows.bzl", "node_addon_windows")
+use_repo(node_addon_windows, "windows_node_api")
 
 node = use_extension("@rules_nodejs//nodejs:extensions.bzl", "node")
 node.toolchain(include_headers = True)
 use_repo(node, "nodejs_toolchains")
 ```
 
-The `node_addon` extension is used only on Windows, where rules_nodejs' built-in
+The `node_addon_windows` extension is used only on Windows, where rules_nodejs' built-in
 Node toolchain does not provide C headers. It downloads Node's C headers and
 Windows import libraries. It defaults to Node 24.14.0. To use a different Node
 release, pass `node_version` and the matching SHA-256 values to
-`node_addon.toolchain(...)`.
+`node_addon_windows.toolchain(...)`.
 
 To use Node 26 with rules_nodejs 6.7.4, provide explicit Node distribution
 metadata because that rules_nodejs release does not include Node 26 in its
 built-in catalog:
 
 ```starlark
-node_addon.toolchain(
+node_addon_windows.toolchain(
     node_version = "26.4.0",
     headers_sha256 = "6eb5714cf9e917c5627f1f4df8ba126080333ddd51bca64bc0d424f82162c434",
     win_arm64_node_lib_sha256 = "c01ce0d5e4e956f0e5e73cdba925d15a6d6f86883aa49f8f0b0de87aa93508ce",

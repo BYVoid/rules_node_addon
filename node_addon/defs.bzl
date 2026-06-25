@@ -5,7 +5,7 @@ load("@rules_cc//cc:defs.bzl", "cc_binary")
 
 _NODE_ADDON_API = Label("@node_addon_api//:node_addon_api")
 _NODE_ADDON_API_HEADERS_ONLY = Label("@node_addon_api//:node_addon_api_headers_only")
-_NODE_API_WINDOWS = Label("@node_addon_node_api//:node_api")
+_NODE_API_WINDOWS = Label("@windows_node_api//:node_api")
 _WINDOWS = Label("@platforms//os:windows")
 _MACOS = Label("@platforms//os:macos")
 

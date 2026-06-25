@@ -221,24 +221,6 @@
   },
   "selectedYankedVersions": {},
   "moduleExtensions": {
-    "//node_addon:windows.bzl%node_addon": {
-      "general": {
-        "bzlTransitiveDigest": "fcFB1Ia9mh4vyeoLEgxgMxwqyCZKH+eqAyyquJuBFyA=",
-        "usagesDigest": "f2MbYxfoS8BKMbf8IH7rGyKp4W9WiHHsZRRzGRSMGko=",
-        "recordedInputs": [],
-        "generatedRepoSpecs": {
-          "node_addon_node_api": {
-            "repoRuleId": "@@//node_addon:windows.bzl%_node_api_repo",
-            "attributes": {
-              "headers_sha256": "87d1a7d80599ce330de0f0832f6b85c7d93c5be7b6a203725afa016405227988",
-              "node_version": "24.14.0",
-              "win_arm64_node_lib_sha256": "59f1c42e5962e9333bb1673c21125b7a7ce9a6908299aee8f7673803c2e24212",
-              "win_x64_node_lib_sha256": "35fcdd35d3d22e283c0e2e095cc43ef676301bb85f950c344a73d59231bd7e61"
-            }
-          }
-        }
-      }
-    },
     "@@aspect_tools_telemetry+//:extension.bzl%telemetry": {
       "general": {
         "bzlTransitiveDigest": "cl5A2O84vDL6Tt+Qga8FCj1DUDGqn+e7ly5rZ+4xvcc=",

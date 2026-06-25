@@ -93,7 +93,7 @@ _toolchain = tag_class(
     },
 )
 
-def _node_addon_impl(module_ctx):
+def _node_addon_windows_impl(module_ctx):
     root_toolchains = []
     dependency_toolchains = []
     for module in module_ctx.modules:
@@ -103,11 +103,11 @@ def _node_addon_impl(module_ctx):
             dependency_toolchains.extend(module.tags.toolchain)
 
     if len(root_toolchains) > 1:
-        fail("Only one node_addon.toolchain tag is supported in the root module")
+        fail("Only one node_addon_windows.toolchain tag is supported in the root module")
     if root_toolchains:
         toolchain = root_toolchains[0]
     elif len(dependency_toolchains) > 1:
-        fail("Only one non-root node_addon.toolchain tag is supported")
+        fail("Only one non-root node_addon_windows.toolchain tag is supported")
     elif dependency_toolchains:
         toolchain = dependency_toolchains[0]
     else:
@@ -119,15 +119,15 @@ def _node_addon_impl(module_ctx):
         )
 
     _node_api_repo(
-        name = "node_addon_node_api",
+        name = "windows_node_api",
         headers_sha256 = toolchain.headers_sha256,
         node_version = toolchain.node_version,
         win_arm64_node_lib_sha256 = toolchain.win_arm64_node_lib_sha256,
         win_x64_node_lib_sha256 = toolchain.win_x64_node_lib_sha256,
     )
 
-node_addon = module_extension(
-    implementation = _node_addon_impl,
+node_addon_windows = module_extension(
+    implementation = _node_addon_windows_impl,
     tag_classes = {
         "toolchain": _toolchain,
     },

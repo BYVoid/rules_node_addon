@@ -12,14 +12,14 @@ local_path_override(
     path = "../..",
 )
 
-node_addon = use_extension("@rules_node_addon//node_addon:windows.bzl", "node_addon")
-node_addon.toolchain(
+node_addon_windows = use_extension("@rules_node_addon//node_addon:windows.bzl", "node_addon_windows")
+node_addon_windows.toolchain(
     headers_sha256 = "6eb5714cf9e917c5627f1f4df8ba126080333ddd51bca64bc0d424f82162c434",
     node_version = "26.4.0",
     win_arm64_node_lib_sha256 = "c01ce0d5e4e956f0e5e73cdba925d15a6d6f86883aa49f8f0b0de87aa93508ce",
     win_x64_node_lib_sha256 = "56f06350037085fce04930befd98327afc86ee46f52af6f6f8a68a03630e8380",
 )
-use_repo(node_addon, "node_addon_node_api")
+use_repo(node_addon_windows, "windows_node_api")
 
 node = use_extension("@rules_nodejs//nodejs:extensions.bzl", "node")
 node.toolchain(
