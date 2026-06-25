@@ -150,9 +150,13 @@ def _cmd_runfiles_env(env):
 
 def _runfiles_path(file):
     workspace_name = file.owner.workspace_name
+    short_path = file.short_path
     if workspace_name:
-        return "{}/{}".format(workspace_name, file.short_path)
-    return "_main/{}".format(file.short_path)
+        external_prefix = "../{}/".format(workspace_name)
+        if short_path.startswith(external_prefix):
+            short_path = short_path[len(external_prefix):]
+        return "{}/{}".format(workspace_name, short_path)
+    return "_main/{}".format(short_path)
 
 def _main_runfiles_path(package, filename):
     if package:
