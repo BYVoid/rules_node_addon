@@ -3,9 +3,15 @@
 load("@bazel_skylib//rules:copy_file.bzl", "copy_file")
 load("@rules_cc//cc:defs.bzl", "cc_binary")
 
+_NODE_ADDON_API = Label("@node_addon_api//:node_addon_api")
+_NODE_ADDON_API_HEADERS_ONLY = Label("@node_addon_api//:node_addon_api_headers_only")
+_NODE_API_WINDOWS = Label("@node_addon_node_api//:node_api")
+_WINDOWS = Label("@platforms//os:windows")
+_MACOS = Label("@platforms//os:macos")
+
 def _default_copts():
     return select({
-        "@platforms//os:windows": ["/std:c++17"],
+        _WINDOWS: ["/std:c++17"],
         "//conditions:default": ["-std=c++17"],
     })
 
@@ -55,7 +61,7 @@ def node_addon(
         defines = defines,
         includes = includes,
         linkopts = linkopts + select({
-            "@platforms//os:macos": ["-undefined", "dynamic_lookup"],
+            _MACOS: ["-undefined", "dynamic_lookup"],
             "//conditions:default": [],
         }),
         linkshared = True,
@@ -63,11 +69,11 @@ def node_addon(
         tags = tags,
         testonly = testonly,
         deps = deps + select({
-            "@platforms//os:windows": [
-                "@node_addon_api//:node_addon_api_headers_only",
-                "@node_addon_node_api//:node_api",
+            _WINDOWS: [
+                _NODE_ADDON_API_HEADERS_ONLY,
+                _NODE_API_WINDOWS,
             ],
-            "//conditions:default": ["@node_addon_api//:node_addon_api"],
+            "//conditions:default": [_NODE_ADDON_API],
         }),
         visibility = ["//visibility:private"],
         **kwargs
