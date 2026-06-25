@@ -38,7 +38,7 @@ def node_addon(
       **kwargs: Extra attributes passed to the underlying `cc_binary`.
     """
 
-    shared_lib = name + ".so"
+    shared_lib = name + "_shared"
 
     cc_binary(
         name = shared_lib,
@@ -55,7 +55,10 @@ def node_addon(
         local_defines = local_defines,
         tags = tags,
         testonly = testonly,
-        deps = ["@node_addon_api//:node_addon_api"] + deps,
+        deps = [
+            "@node_addon_api//:node_addon_api_headers_only",
+            "@node_addon_node_api//:node_api",
+        ] + deps,
         visibility = ["//visibility:private"],
         **kwargs
     )
@@ -64,7 +67,30 @@ def node_addon(
         name = name,
         srcs = [":" + shared_lib],
         outs = [name + ".node"],
-        cmd = "cp $< $@",
+        cmd = """
+for f in $(SRCS); do
+  case "$$f" in
+    *.so|*.dylib)
+      cp "$$f" "$@"
+      exit 0
+      ;;
+  esac
+done
+echo "No shared library found in $(SRCS)" >&2
+exit 1
+""",
+        cmd_bat = """
+@echo off
+for %%f in ($(SRCS)) do (
+  if /I "%%~xf"==".dll" (
+    copy /Y "%%f" "$@"
+    if errorlevel 1 exit /B 1
+    exit /B 0
+  )
+)
+echo No DLL found in $(SRCS) 1>&2
+exit /B 1
+""",
         tags = tags,
         testonly = testonly,
         visibility = visibility,

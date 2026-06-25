@@ -4,7 +4,10 @@ load("//node_addon:defs.bzl", "node_addon")
 node_addon(
     name = "hello",
     srcs = ["hello.cc"],
-    copts = ["-std=c++17"],
+    copts = select({
+        "@platforms//os:windows": ["/std:c++17"],
+        "//conditions:default": ["-std=c++17"],
+    }),
 )
 
 js_test(
