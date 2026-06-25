@@ -92,11 +92,11 @@ echo No DLL found in $(SRCS) 1>&2
 exit /B 1
 """,
         cmd_ps = """
-$ErrorActionPreference = "Stop"
-$srcs = "$(SRCS)".Split(" ", [System.StringSplitOptions]::RemoveEmptyEntries)
-foreach ($src in $srcs) {
-  if ([System.IO.Path]::GetExtension($src) -ieq ".dll") {
-    Copy-Item -LiteralPath $src -Destination "$(OUTS)" -Force
+$$ErrorActionPreference = "Stop"
+$$srcs = "$(SRCS)".Split(" ", [System.StringSplitOptions]::RemoveEmptyEntries)
+foreach ($$src in $$srcs) {
+  if ([System.IO.Path]::GetExtension($$src) -ieq ".dll") {
+    Copy-Item -LiteralPath $$src -Destination "$(OUTS)" -Force
     exit 0
   }
 }
