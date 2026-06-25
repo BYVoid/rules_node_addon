@@ -21,8 +21,16 @@ fi
 rlocation() {
   local path="$1"
   if [[ -n "$runfiles_dir" ]]; then
-    printf '%s\n' "${runfiles_dir}/${path}"
-    return 0
+    local candidate="${runfiles_dir}/${path}"
+    if [[ -e "$candidate" ]]; then
+      printf '%s\n' "$candidate"
+      return 0
+    fi
+  fi
+
+  if [[ -z "$manifest" ]]; then
+    echo "bun_run_test: missing runfile $path" >&2
+    exit 1
   fi
 
   local result=""

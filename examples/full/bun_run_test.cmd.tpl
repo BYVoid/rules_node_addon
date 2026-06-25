@@ -33,6 +33,7 @@ for %%I in ("%node%") do set "node_dir=%%~dpI"
 {{RUNFILES_ENV}}
 
 cd /d "%workspace%"
+if errorlevel 1 exit /b 1
 
 set "BUN_INSTALL_NO_TRACK=1"
 set "DO_NOT_TRACK=1"
@@ -49,14 +50,19 @@ exit /b %ERRORLEVEL%
 set "runfile_key=%~1"
 set "result_var=%~2"
 if defined runfiles_dir (
-  set "%result_var%=%runfiles_dir%\%runfile_key:/=\%"
-  exit /b 0
+  set "candidate=%runfiles_dir%\%runfile_key:/=\%"
+  if exist "!candidate!" (
+    set "%result_var%=!candidate!"
+    exit /b 0
+  )
 )
+if not defined manifest goto missing_runfile
 for /f "usebackq tokens=1,* delims= " %%A in ("%manifest%") do (
   if "%%A"=="%runfile_key%" (
     set "%result_var%=%%B"
     exit /b 0
   )
 )
+:missing_runfile
 echo bun_run_test: missing runfile %runfile_key% 1>&2
 exit /b 1

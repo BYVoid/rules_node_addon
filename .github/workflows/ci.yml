@@ -37,4 +37,4 @@ jobs:
 
       - name: Test full TypeScript example
         working-directory: examples/full
-        run: npx --yes @bazel/bazelisk --nohome_rc test //... --verbose_failures
+        run: npx --yes @bazel/bazelisk --nohome_rc test //... --verbose_failures --test_output=errors
