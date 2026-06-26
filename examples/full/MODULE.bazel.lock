@@ -256,7 +256,7 @@
   "moduleExtensions": {
     "//:bun.bzl%bun": {
       "general": {
-        "bzlTransitiveDigest": "84vtougtsdBRmqRCAhifkvpyf0DePIzmRrG8EJpRaf8=",
+        "bzlTransitiveDigest": "7GaVddnWtOHOazQeq5djJQu7d7t3N4PjV0JmBGstWsc=",
         "usagesDigest": "IlBSDPN6Nsk0vCBoimRPyDy4QqVcMzwN1C6HyQfkm0E=",
         "recordedInputs": [
           "REPO_MAPPING:,bazel_tools bazel_tools",

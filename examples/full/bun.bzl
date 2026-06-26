@@ -114,9 +114,6 @@ bun = module_extension(
 def _shell_quote(value):
     return "'" + str(value).replace("'", "'\"'\"'") + "'"
 
-def _cmd_quote(value):
-    return '"' + str(value).replace('"', '\\"') + '"'
-
 def _validate_env_name(name):
     if not name:
         fail("Environment variable names must be non-empty.")
@@ -136,18 +133,6 @@ def _sh_runfiles_env(env):
         lines.append("export {}=\"$(rlocation {})\"".format(name, _shell_quote(path)))
     return "\n".join(lines)
 
-def _cmd_runfiles_env(env):
-    lines = []
-    index = 0
-    for name, path in env.items():
-        _validate_env_name(name)
-        result_var = "__runfiles_env_{}".format(index)
-        lines.append("call :rlocation {} {}".format(_cmd_quote(path), result_var))
-        lines.append("if errorlevel 1 exit /b 1")
-        lines.append("set \"{}=!{}!\"".format(name, result_var))
-        index += 1
-    return "\n".join(lines)
-
 def _runfiles_path(file):
     workspace_name = file.owner.workspace_name
     short_path = file.short_path
@@ -163,9 +148,6 @@ def _main_runfiles_path(package, filename):
         return "_main/{}/{}".format(package, filename)
     return "_main/{}".format(filename)
 
-def _is_windows(ctx):
-    return ctx.target_platform_has_constraint(ctx.attr._windows_constraint[platform_common.ConstraintValueInfo])
-
 def _collect_runfiles(targets):
     return [target[DefaultInfo].files for target in targets] + [
         target[DefaultInfo].default_runfiles.files
@@ -173,11 +155,8 @@ def _collect_runfiles(targets):
     ]
 
 def _bun_run_test_impl(ctx):
-    windows = _is_windows(ctx)
-    extension = ".cmd" if windows else ".sh"
-    executable = ctx.actions.declare_file(ctx.label.name + extension)
-    template = ctx.file._cmd_launcher_template if windows else ctx.file._sh_launcher_template
-    quote = _cmd_quote if windows else _shell_quote
+    executable = ctx.actions.declare_file(ctx.label.name + ".sh")
+    template = ctx.file._sh_launcher_template
     node_info = ctx.attr._node_runtime[NodeInfo]
     node = node_info.node
     if not node:
@@ -191,12 +170,12 @@ def _bun_run_test_impl(ctx):
         template = template,
         is_executable = True,
         substitutions = {
-            "{{ARGS}}": " ".join([quote(arg) for arg in ctx.attr.args]),
+            "{{ARGS}}": " ".join([_shell_quote(arg) for arg in ctx.attr.args]),
             "{{BUN_PATH}}": _runfiles_path(ctx.file._bun),
             "{{NODE_PATH}}": _runfiles_path(node),
             "{{PACKAGE_JSON_PATH}}": _main_runfiles_path(package_dir, "package.json"),
-            "{{RUNFILES_ENV}}": _cmd_runfiles_env(runfiles_env) if windows else _sh_runfiles_env(runfiles_env),
-            "{{SCRIPT}}": quote(ctx.attr.script),
+            "{{RUNFILES_ENV}}": _sh_runfiles_env(runfiles_env),
+            "{{SCRIPT}}": _shell_quote(ctx.attr.script),
         },
     )
 
@@ -230,15 +209,10 @@ bun_run_test = rule(
             default = "@rules_nodejs//nodejs:current_node_runtime",
             cfg = "exec",
         ),
-        "_cmd_launcher_template": attr.label(
-            default = "//:bun_run_test.cmd.tpl",
-            allow_single_file = True,
-        ),
         "_sh_launcher_template": attr.label(
             default = "//:bun_run_test.sh.tpl",
             allow_single_file = True,
         ),
-        "_windows_constraint": attr.label(default = "@platforms//os:windows"),
     },
     test = True,
 )
