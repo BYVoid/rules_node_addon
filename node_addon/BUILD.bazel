@@ -1,16 +1,6 @@
-load("@bazel_skylib//rules:common_settings.bzl", "string_flag")
-load("//node_addon:defs.bzl", "napi_version_define")
-
 package(default_visibility = ["//visibility:public"])
 
 exports_files([
     "defs.bzl",
     "windows.bzl",
 ])
-
-string_flag(
-    name = "napi_version",
-    build_setting_default = "",
-)
-
-napi_version_define(name = "napi_version_define")

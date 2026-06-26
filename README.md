@@ -45,11 +45,15 @@ node_addon(
 
 This produces `hello.node`, suitable for `require("./hello.node")` from Node.js.
 
-By default, `node_addon` does not define `NAPI_VERSION`. To build against a
-specific Node-API version, pass the `napi_version` build setting:
+By default, `node_addon` does not define `NAPI_VERSION`. To build one addon
+target against a specific Node-API version, set `napi_version`:
 
-```sh
-bazel build //path/to:addon --@rules_node_addon//node_addon:napi_version=8
+```starlark
+node_addon(
+    name = "hello",
+    srcs = ["hello.cc"],
+    napi_version = "8",
+)
 ```
 
 Run the included test with:
