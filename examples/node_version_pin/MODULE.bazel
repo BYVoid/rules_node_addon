@@ -19,7 +19,6 @@ node_addon_windows.toolchain(
     win_arm64_node_lib_sha256 = "afef88b389be8ac30974d2cf69de26001f95f1e9efe1811f2e8467c4cdfe05d0",
     win_x64_node_lib_sha256 = "be205f2934c17fbd56ce6cdfcfbeb2f6a85061d5141e7a58eba240a8477a12fd",
 )
-use_repo(node_addon_windows, "windows_node_api")
 
 node = use_extension("@rules_nodejs//nodejs:extensions.bzl", "node")
 node.toolchain(

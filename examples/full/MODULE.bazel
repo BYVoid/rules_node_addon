@@ -15,9 +15,6 @@ local_path_override(
     path = "../..",
 )
 
-node_addon_windows = use_extension("@rules_node_addon//node_addon:windows.bzl", "node_addon_windows")
-use_repo(node_addon_windows, "windows_node_api")
-
 node = use_extension("@rules_nodejs//nodejs:extensions.bzl", "node")
 node.toolchain(include_headers = True)
 use_repo(node, "nodejs_toolchains")
