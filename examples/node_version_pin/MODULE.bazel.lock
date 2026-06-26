@@ -307,7 +307,7 @@
     "@@rules_node_addon+//node_addon:windows.bzl%node_addon_windows": {
       "general": {
         "bzlTransitiveDigest": "mSDCSku6ucwsexmDIvrQtQ+UDGdJisPoQ9c0eScU5dA=",
-        "usagesDigest": "iaGWEC3TtTfrTqksA9Pzq8+78Ku9LS7F+1PM800Li/4=",
+        "usagesDigest": "U4tsX5EP+JxysHZPyvsUvylr9M2z3dEI3LKYYsLiAh4=",
         "recordedInputs": [],
         "generatedRepoSpecs": {
           "windows_node_api": {
@@ -325,7 +325,7 @@
     "@@rules_nodejs+//nodejs:extensions.bzl%node": {
       "general": {
         "bzlTransitiveDigest": "oZFClfRhTTwsYzpxVPkOpOt/r0+OzEfEV37au0jFZ0s=",
-        "usagesDigest": "Jjo2unEoUg6Tp6FeaXhP39CojA4MvbJXlpl9gYu0+qw=",
+        "usagesDigest": "2ioTViqEB7hazC4vGZYoYPJyNJs2ntpeZNIgKJljIYQ=",
         "recordedInputs": [],
         "generatedRepoSpecs": {
           "nodejs_linux_amd64": {

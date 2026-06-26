@@ -16,7 +16,7 @@ Bun crashes when requiring this native addon on Windows.
 Enable the Windows addon support repository and Node runtime with headers in your root `MODULE.bazel`:
 
 ```starlark
-bazel_dep(name = "rules_node_addon", version = "1.0.0")
+bazel_dep(name = "rules_node_addon", version = "1.0.1")
 bazel_dep(name = "rules_nodejs", version = "6.7.4")
 
 node_addon_windows = use_extension("@rules_node_addon//node_addon:windows.bzl", "node_addon_windows")
