@@ -1,15 +1,16 @@
 # rules_node_addon
 
-Bazel rules for building Node.js native addons.
+Bazel rules for building native addons that support Node.js and Bun.
 
 ## Runtime support
 
 `node_addon` builds Node-API addons for Node.js. Loading the generated `.node`
 file with Node.js is supported on Linux, macOS, and Windows.
 
-Bun can also load Node-API addons, and the full example includes a Bun test on
-Linux and macOS. Bun on Windows is not currently supported by these rules because
-Bun crashes when requiring this native addon on Windows.
+Bun can also load Node-API addons, and the
+[`examples/full`](examples/full) example includes a Bun test on Linux and macOS.
+Bun on Windows is not currently supported by these rules because Bun crashes when
+requiring this native addon on Windows.
 
 ## Setup
 
