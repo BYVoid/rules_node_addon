@@ -17,7 +17,7 @@ requiring this native addon on Windows.
 Enable the Node runtime with headers in your root `MODULE.bazel`:
 
 ```starlark
-bazel_dep(name = "rules_node_addon", version = "1.0.2")
+bazel_dep(name = "rules_node_addon", version = "1.0.3")
 bazel_dep(name = "rules_nodejs", version = "6.7.4")
 
 node = use_extension("@rules_nodejs//nodejs:extensions.bzl", "node")

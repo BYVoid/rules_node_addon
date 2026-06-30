@@ -325,7 +325,7 @@
     "@@rules_nodejs+//nodejs:extensions.bzl%node": {
       "general": {
         "bzlTransitiveDigest": "oZFClfRhTTwsYzpxVPkOpOt/r0+OzEfEV37au0jFZ0s=",
-        "usagesDigest": "uqNwDPV700A1HNNHteA3nSTA1fv+4PSDUttC4OTFrYU=",
+        "usagesDigest": "5ayaBZJbHvJc1ow5ZdANCCi1G9P+ynxLV6DwpYvXxgA=",
         "recordedInputs": [],
         "generatedRepoSpecs": {
           "nodejs_linux_amd64": {

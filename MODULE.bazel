@@ -1,6 +1,6 @@
 module(
     name = "rules_node_addon",
-    version = "1.0.2",
+    version = "1.0.3",
 )
 
 bazel_dep(name = "aspect_rules_js", version = "3.2.2", dev_dependency = True)
