@@ -90,6 +90,10 @@ def node_addon(
         name = name,
         src = ":" + shared_lib,
         out = name + ".node",
+        # Keep the output as a real .node file. If this is a symlink, some
+        # imports resolve and load the original .so/.dylib path instead, which
+        # causes Node addon loading to fail.
+        allow_symlink = False,
         tags = tags,
         testonly = testonly,
         visibility = visibility,

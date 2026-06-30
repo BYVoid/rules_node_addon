@@ -1,6 +1,5 @@
 load("@aspect_rules_js//js:defs.bzl", "js_test")
 load("@aspect_rules_ts//ts:defs.bzl", "ts_project")
-load("@bazel_skylib//rules:copy_file.bzl", "copy_file")
 load("@rules_node_addon//node_addon:defs.bzl", "node_addon")
 load("//:bun.bzl", "bun_run_test")
 
@@ -21,20 +20,17 @@ ts_project(
     validate = False,
 )
 
-copy_file(
-    name = "hello_full_dist",
-    src = ":hello_full",
-    out = "dist/hello_full.node",
-)
-
 js_test(
     name = "full_js_test",
     data = [
-        ":hello_full_dist",
+        ":hello_full",
         ":test_ts",
         "package.json",
     ],
     entry_point = "dist/test.js",
+    env = {
+        "ADDON_PATH": "../hello_full.node",
+    },
 )
 
 bun_run_test(

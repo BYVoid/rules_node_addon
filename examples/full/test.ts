@@ -35,7 +35,10 @@ type Addon = {
 
 const require = createRequire(import.meta.url);
 const dirname = path.dirname(fileURLToPath(import.meta.url));
-const sourceAddonPath = process.env.ADDON_PATH ?? path.join(dirname, "hello_full.node");
+const configuredAddonPath = process.env.ADDON_PATH;
+const sourceAddonPath = configuredAddonPath
+  ? path.resolve(dirname, configuredAddonPath)
+  : path.join(dirname, "hello_full.node");
 const addonPath = path.join(process.env.TEST_TMPDIR ?? dirname, "hello_full.node");
 copyFileSync(sourceAddonPath, addonPath);
 const addon = require(addonPath) as Addon;
