@@ -1,0 +1,87 @@
+name: Publish to BCR
+
+on:
+  push:
+    tags:
+      - "v*"
+  workflow_dispatch:
+    inputs:
+      tag_name:
+        description: "Release tag to publish, for example v1.0.3"
+        required: true
+        type: string
+      templates_ref:
+        description: "Optional ref to read .bcr templates from when republishing an older tag"
+        required: false
+        type: string
+
+jobs:
+  release-archive:
+    name: Create release archive
+    runs-on: ubuntu-latest
+    permissions:
+      contents: write
+    outputs:
+      tag_name: ${{ steps.version.outputs.tag_name }}
+      version: ${{ steps.version.outputs.version }}
+    steps:
+      - name: Resolve version
+        id: version
+        env:
+          EVENT_NAME: ${{ github.event_name }}
+          PUSH_TAG: ${{ github.ref_name }}
+          DISPATCH_TAG: ${{ inputs.tag_name }}
+        run: |
+          if [[ "$EVENT_NAME" == "workflow_dispatch" ]]; then
+            tag="$DISPATCH_TAG"
+          else
+            tag="$PUSH_TAG"
+          fi
+          version="${tag#v}"
+          echo "tag_name=$tag" >> "$GITHUB_OUTPUT"
+          echo "version=$version" >> "$GITHUB_OUTPUT"
+
+      - name: Checkout release tag
+        uses: actions/checkout@v4
+        with:
+          ref: ${{ steps.version.outputs.tag_name }}
+
+      - name: Build source archive
+        env:
+          TAG_NAME: ${{ steps.version.outputs.tag_name }}
+          VERSION: ${{ steps.version.outputs.version }}
+        run: |
+          mkdir -p dist
+          git archive \
+            --format=tar.gz \
+            --prefix="rules_node_addon-${VERSION}/" \
+            --output="dist/rules_node_addon-${VERSION}.tar.gz" \
+            "$TAG_NAME"
+
+      - name: Create or update GitHub release
+        env:
+          GH_TOKEN: ${{ github.token }}
+          TAG_NAME: ${{ steps.version.outputs.tag_name }}
+          VERSION: ${{ steps.version.outputs.version }}
+        run: |
+          if gh release view "$TAG_NAME" >/dev/null 2>&1; then
+            gh release upload "$TAG_NAME" "dist/rules_node_addon-${VERSION}.tar.gz" --clobber
+          else
+            gh release create "$TAG_NAME" "dist/rules_node_addon-${VERSION}.tar.gz" \
+              --title "$TAG_NAME" \
+              --notes "Release $TAG_NAME"
+          fi
+
+  publish:
+    name: Open BCR pull request
+    needs: release-archive
+    uses: bazel-contrib/publish-to-bcr/.github/workflows/publish.yaml@v1.4.1
+    permissions:
+      contents: write
+    with:
+      tag_name: ${{ needs.release-archive.outputs.tag_name }}
+      registry_fork: BYVoid/bazel-central-registry
+      templates_ref: ${{ inputs.templates_ref }}
+      attest: false
+    secrets:
+      publish_token: ${{ secrets.BCR_PUBLISH_TOKEN }}
